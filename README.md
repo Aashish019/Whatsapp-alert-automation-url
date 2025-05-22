@@ -27,6 +27,7 @@ Alerts are delivered via WhatsApp using the [`whatsapp-web.js`](https://github.c
 .
 ├── monitor.py             # Main Python script
 ├── whatsapp.js            # WhatsApp messaging script (Node.js)
+├── list-group.js          # Lists group IDs from WhatsApp chats
 ├── clients.json           # Client name → URL map
 ├── .env                   # Contains WhatsApp group ID and number
 ├── log/
@@ -62,7 +63,7 @@ GROUP_ID=1203xxxxxxxxx@g.us
 NUMBER=+1234567890
 ```
 
-> ✅ Use the dev console in `whatsapp.js` to log your group ID after sending a message.
+> ✅ Use the `list-group.js` script to log your group ID from existing chats.
 
 ### 5. Run once manually
 
@@ -106,19 +107,5 @@ Time: 2025-05-19 03:02:00
 
 ## 🙏 Credits
 
-- Python core logic by [Your Name]
+- Python core logic by [Aashish](https://github.com/Aashish019)
 - WhatsApp integration via [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js)
-
----
-
-## 🛠 TODO
-
-- [ ] Add Telegram or Slack alert option
-- [ ] Dashboard with uptime stats
-- [ ] Duplicate alert suppression
-
----
-
-## 📄 License
-
-MIT License
