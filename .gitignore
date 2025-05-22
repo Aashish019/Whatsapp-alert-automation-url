@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Node.js
+node_modules/
+
+# Logs
+*.log
+log/
+
+# Environment
+.env
+.env.*
+
+# VS Code
+.vscode/
+
+# System
+.DS_Store
+*~
+
+# Auth/session/cache (wwebjs)
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Test output
+testgrp/
+groups.txt
+
+# Backup/swap
+*.swp
+*.swo
+
+# Ignore package-lock if not needed
+# package-lock.json
