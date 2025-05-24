@@ -64,4 +64,7 @@ def monitor_sites():
 
 
 if __name__ == "__main__":
-    monitor_sites()
+    while True:
+        monitor_sites()
+        print("⏱️ Waiting 5 minutes before next check...\n")
+        time.sleep(300)  # 300 seconds = 5 minutes

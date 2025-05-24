@@ -40,7 +40,7 @@ Alerts are delivered via WhatsApp using the [`whatsapp-web.js`](https://github.c
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/yourusername/whatsapp-server-monitor.git
+git clone https://github.com/Aashish019/whatsapp-server-monitor.git
 cd whatsapp-server-monitor
 ```
 
@@ -73,16 +73,97 @@ python3 monitor.py
 
 ---
 
-## ⏱️ Schedule as Cron Job
+## 🛠️ Run Automatically with systemd
 
-Edit your crontab:
-```bash
-crontab -e
+Instead of using a cron job, you can configure this monitor to run every 10 minutes using an infinite loop inside a systemd service. This ensures the script stays running in the background and survives reboots.
+
+### 1. Add infinite loop to `monitor.py`
+
+Make sure the `monitor.py` ends with:
+
+```python
+if __name__ == "__main__":
+    while True:
+        monitor_sites()
+        print("⏱️ Waiting 10 minutes before next check...\n")
+        time.sleep(600)  # 600 seconds = 10 minutes
 ```
 
-Add this line to run every 5 minutes:
-```cron
-*/5 * * * * /usr/bin/python3 /home/username/DevOps/whatsapp-qr/monitor.py >> /home/username/DevOps/whatsapp-qr/log/cron.log 2>&1
+---
+
+### 2. Create a shell wrapper script
+
+Create `/home/mcmillan/DevOps/whatsapp-qr/run_monitor.sh` with the following content:
+
+```bash
+#!/bin/bash
+source /home/mcmillan/.bashrc
+cd /home/mcmillan/DevOps/whatsapp-qr
+/usr/bin/python3 monitor.py
+```
+
+Then make it executable:
+
+```bash
+chmod +x /home/mcmillan/DevOps/whatsapp-qr/run_monitor.sh
+```
+
+---
+
+### 3. Create a systemd service file
+
+Create the file:
+
+```bash
+sudo nano /etc/systemd/system/monitor.service
+```
+
+Paste the following configuration:
+
+```ini
+[Unit]
+Description=Odoo Monitor Script
+After=network.target
+
+[Service]
+User=mcmillan
+WorkingDirectory=/home/mcmillan/DevOps/whatsapp-qr
+ExecStart=/home/mcmillan/DevOps/whatsapp-qr/run_monitor.sh
+Restart=always
+RestartSec=10
+Environment=PATH=/usr/bin:/usr/local/bin
+StandardOutput=append:/home/mcmillan/DevOps/whatsapp-qr/log/monitor.service.log
+StandardError=append:/home/mcmillan/DevOps/whatsapp-qr/log/monitor.service.err
+
+[Install]
+WantedBy=multi-user.target
+```
+
+---
+
+### 4. Enable and start the service
+
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable monitor.service
+sudo systemctl start monitor.service
+```
+
+---
+
+### 5. Monitor the service
+
+Check status:
+
+```bash
+sudo systemctl status monitor.service
+```
+
+View logs:
+
+```bash
+tail -f /home/mcmillan/DevOps/whatsapp-qr/log/monitor.service.log
 ```
 
 ---
